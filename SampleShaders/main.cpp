@@ -52,8 +52,8 @@ int main()
     int curShader=0;
 	const int NumShaders=5;
 	sf::Shader shaders[NumShaders];
-	std::string vertexShaders[NumShaders]={"minimal_vert.glsl","minimal_vert.glsl","minimal_vert.glsl","minimal_vert.glsl","minimal_vert.glsl"};
-	std::string fragShaders[NumShaders]={"minimal_frag.glsl","red_frag.glsl","minimal_frag.glsl","minimal_frag.glsl","minimal_frag.glsl"};
+	std::string vertexShaders[NumShaders]={"minimal_vert.glsl","flatten_vert.glsl","multicolor_vert.glsl","minimal_vert.glsl","minimal_vert.glsl"};
+	std::string fragShaders[NumShaders]={"minimal_frag.glsl","red_frag.glsl","color_frag.glsl","minimal_frag.glsl","minimal_frag.glsl"};
 	std::string shaderDir="..\\SampleShaders\\";
 	
 	for(int i=0;i<NumShaders;i++){
@@ -77,6 +77,8 @@ int main()
     glEnable(GL_DEPTH_TEST); 
     glDepthMask(GL_TRUE); 
   
+	enum drawModes{wireframe,outline,solid,END} drawMode=wireframe;
+
     //// Setup a perspective projection & Camera position 
     glMatrixMode(GL_PROJECTION); 
     glLoadIdentity(); 
@@ -122,6 +124,13 @@ int main()
 				curShader++;
 				curShader%=NumShaders;
 			}
+						
+			if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::W)){
+				drawMode=(drawModes)(drawMode+1);
+				if(drawMode==END)
+					drawMode=(drawModes)0;
+			}
+  
             
         } 
           
@@ -143,10 +152,18 @@ int main()
 		glRotated(angle/10, 1, 1, 1); // rotate
 		
 		
-		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-          
-
+		switch(drawMode){
+		case wireframe:
+			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+			break;
+		case solid:
+		case outline:
+			glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+			break;
+  
+		}
 		glDrawElements(GL_TRIANGLES, 20*3, GL_UNSIGNED_INT,triangles);
+		
 	
   
 

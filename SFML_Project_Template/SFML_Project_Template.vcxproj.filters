@@ -25,6 +25,9 @@
     <None Include="..\SampleShaders\red_frag.glsl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\SampleShaders\flatten_vert.glsl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
