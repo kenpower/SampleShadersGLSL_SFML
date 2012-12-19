@@ -16,13 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
-    <None Include="..\SampleShaders\minimal_vert.glsl">
+    <None Include="vertex.glsl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="..\SampleShaders\minimal_frag.glsl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\SampleShaders\red_frag.glsl">
+    <None Include="frag.glsl">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
@@ -35,10 +32,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\SampleShaders\main.cpp">
+    <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\SampleShaders\stdafx.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

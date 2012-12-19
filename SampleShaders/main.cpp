@@ -23,7 +23,8 @@
 #include <GL/glew.h>
 #include "SFML/Graphics.hpp" 
 #include "SFML/OpenGL.hpp" 
-#include <iostream> 
+#include <iostream>
+#include <sstream> 
   
   
   
@@ -38,13 +39,30 @@ int main()
   
 	// Create a clock for measuring time elapsed     
 	sf::Clock Clock; 
-     
-	sf::Shader shader;
-	if(!shader.loadFromFile("..\\SFML_Project_Template\\vertex.glsl","..\\SFML_Project_Template\\frag.glsl")){
-	  std::cout << "Error:\n"<<"loading shaders";
-	};
+	//create a font
+	sf::Font font;
 
-	shader.bind();
+	// Load it from a file
+	if (!font.loadFromFile("../sansation.ttf"))
+		//find this file in the "pong" example in the SFML examples folder
+	{
+		std::cout << "Error loading font\n" ;
+	}
+
+    int curShader=0;
+	const int NumShaders=5;
+	sf::Shader shaders[NumShaders];
+	std::string vertexShaders[NumShaders]={"minimal_vert.glsl","minimal_vert.glsl","minimal_vert.glsl","minimal_vert.glsl","minimal_vert.glsl"};
+	std::string fragShaders[NumShaders]={"minimal_frag.glsl","red_frag.glsl","minimal_frag.glsl","minimal_frag.glsl","minimal_frag.glsl"};
+	std::string shaderDir="..\\SampleShaders\\";
+	
+	for(int i=0;i<NumShaders;i++){
+		if(!shaders[i].loadFromFile(shaderDir+vertexShaders[i],shaderDir+fragShaders[i])){
+		  std::cout << "Error:\n" << "loading shaders" << vertexShaders[i] << " " <<fragShaders[i] ;
+		};
+	}	
+
+	
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
@@ -82,41 +100,11 @@ int main()
 	GLuint triangles[][3]={ {1,4,0}, {4,9,0},   {4,5,9},   {8,5,4},   {1,8,4},{1,10,8},  {10,3,8},   {8,3,5},   {3,2,5},   {3,7,2},{3,10,7},  {10,6,7},   {6,11,7},  {6,0,11},  {6,1,0}, {10,1,6},  {11,0,9},   {2,11,9},   {5,2,9},   {11,2,7}};
 // each triplet of integer, represents a triangle, each integer is an index into the vertex array
 
-	bool VBO=true;
-	//VBO=false;
-	//glEnableClientState(GL_VERTEX_ARRAY); // we want to use vertex arrays for coordinate info
+	glEnableClientState(GL_VERTEX_ARRAY); // we want to use vertex arrays for coordinate info
 
-	if(!VBO){
-		glEnableClientState(GL_VERTEX_ARRAY); // we want to use vertex arrays for coordinate info
+	glVertexPointer(3,GL_FLOAT,0,(GLvoid*)vertices);	// give openGL our array of vertices
 
-		glVertexPointer(3,GL_FLOAT,0,(GLvoid*)vertices);	// give openGL our array of vertices
-	}else{
-		unsigned int vertexBO;
-		glGenBuffers( 1, &vertexBO );                  // Get A Valid Name
-		glBindBuffer( GL_ARRAY_BUFFER, vertexBO );         // Bind The Buffer
-		// Load The Data
-		glBufferData( GL_ARRAY_BUFFER, 12*3*sizeof(float), vertices, GL_STATIC_DRAW);
-			
-		//glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );       // Set The Vertex Pointer To The Vertex 
-		glEnableVertexAttribArray(0);                                               //ENABLE VERTEX POSITION
-	    glVertexAttribPointer(  //describe the format of the data in the buffer
-				0,//index of the attribute
-				3, //num of values per vertex (num coordinates)
-				GL_FLOAT, //type of coord
-				GL_FALSE, //should they be normalized?
-				0,//stride
-				0);    //offset to first attribute in array
-
-		// create index buffer
-		unsigned int indexBO;
-		glGenBuffers( 1, &indexBO );                  // Get A Valid Name
-		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBO );         // Bind The Buffer
-		// Load The Data
-		glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*20*3, triangles, GL_STATIC_DRAW);
-
-	}
-    // Start game loop 
-    while (App.isOpen()) 
+	while (App.isOpen()) 
     { 
         // Process events 
         sf::Event Event; 
@@ -130,13 +118,19 @@ int main()
             if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::Escape)) 
                 App.close(); 
             
-   
+			if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::Space)){
+				curShader++;
+				curShader%=NumShaders;
+			}
+            
         } 
           
 		if(!App.isOpen()){
 			continue;
 		}
         //Prepare for drawing 
+
+		shaders[curShader].bind();
         // Clear color and depth buffer 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
   
@@ -149,16 +143,47 @@ int main()
 		glRotated(angle/10, 1, 1, 1); // rotate
 		
 		
-       glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+		//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
           
-	   if(VBO){
-			glDrawElements(GL_TRIANGLES, 20*3, GL_UNSIGNED_INT,0);
-			
-	   }
-	   else
-			 glDrawElements(GL_TRIANGLES, 20*3, GL_UNSIGNED_INT,triangles);
+
+		glDrawElements(GL_TRIANGLES, 20*3, GL_UNSIGNED_INT,triangles);
 	
   
+
+		//Display info
+	    shaders[curShader].unbind();
+		App.pushGLStates();
+
+
+		std::ostringstream vs; //string buffer to convert numbers to string
+		vs << "VertexShader is: " << vertexShaders[curShader];// 
+		
+		std::ostringstream fs; //string buffer to convert numbers to string
+		fs << "FragmentShader is: " << fragShaders[curShader];// 
+
+
+		//set up text properties
+		sf::Text atext;
+		atext.setFont(font);
+		atext.setCharacterSize(20);
+		atext.setStyle(sf::Text::Bold);
+		atext.setColor(sf::Color::White);
+		atext.setPosition(0,0);
+
+		atext.setString(vs.str()); //ss.str() converts the string buffer into a regular string 
+
+		//draw the string
+		App.draw(atext);
+
+		atext.setPosition(0,25);
+
+		atext.setString(fs.str()); //ss.str() converts the string buffer into a regular string 
+
+		App.draw(atext);
+
+		//restore OpenGL setting that were saved earlier
+		App.popGLStates();
+		
         // Finally, display rendered frame on screen 
         App.display(); 
     } 
