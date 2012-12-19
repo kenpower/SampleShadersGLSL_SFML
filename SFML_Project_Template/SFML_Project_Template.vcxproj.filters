@@ -13,20 +13,36 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{140a94c1-88f1-4b03-92ed-f34dec3ae035}</UniqueIdentifier>
+      <Extensions>glsl</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
-    <None Include="..\SampleShaders\minimal_vert.glsl">
-      <Filter>Source Files</Filter>
+    <None Include="..\SampleShaders\color_frag.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="..\SampleShaders\minimal_frag.glsl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\SampleShaders\red_frag.glsl">
-      <Filter>Source Files</Filter>
+    <None Include="..\SampleShaders\multicolor_vert.glsl">
+      <Filter>Shaders</Filter>
     </None>
     <None Include="..\SampleShaders\flatten_vert.glsl">
-      <Filter>Source Files</Filter>
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\SampleShaders\minimal_frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\SampleShaders\minimal_vert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\SampleShaders\modelcolor_vert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\SampleShaders\texture_frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\SampleShaders\texture_vert.glsl">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

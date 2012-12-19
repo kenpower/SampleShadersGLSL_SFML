@@ -1,5 +1,6 @@
 #version 120
 
+//use vertex position to derive a colour for the vertex
 
 void main()
 {

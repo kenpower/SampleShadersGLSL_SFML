@@ -1,8 +1,12 @@
 #version 120
 
-//simplest possible vertex shader
+//use the vertex colour as provided by OpenGL 
+
 void main()
 {
+	
     gl_Position = gl_ProjectionMatrix*gl_ModelViewMatrix*gl_Vertex;
+
+	gl_FrontColor=gl_Color;
 
 }

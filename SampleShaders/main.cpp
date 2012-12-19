@@ -53,18 +53,27 @@ int main()
 	//create a font
 	sf::Font font;
 
-	// Load it from a file
+	// Load font from a file
 	if (!font.loadFromFile("../sansation.ttf"))
 		//find this file in the "pong" example in the SFML examples folder
 	{
 		std::cout << "Error loading font\n" ;
 	}
 
+	//load texture image
+	sf::Texture senna_img;
+	sf::String senna_file="../lotus1986.png";
+	if (!senna_img.loadFromFile(senna_file))
+	{
+		std::cout << "Could not load " << senna_file.getData();
+
+	}
+
     int curShader=0;
 	const int NumShaders=5;
 	sf::Shader shaders[NumShaders];
-	std::string vertexShaders[NumShaders]={"minimal_vert.glsl","flatten_vert.glsl","multicolor_vert.glsl","minimal_vert.glsl","minimal_vert.glsl"};
-	std::string fragShaders[NumShaders]={"minimal_frag.glsl","red_frag.glsl","color_frag.glsl","minimal_frag.glsl","minimal_frag.glsl"};
+	std::string vertexShaders[NumShaders]={	"minimal_vert.glsl","flatten_vert.glsl","multicolor_vert.glsl",	"modelcolor_vert.glsl",	"texture_vert.glsl"};
+	std::string fragShaders[NumShaders]={	"minimal_frag.glsl","minimal_frag.glsl","color_frag.glsl",		"color_frag.glsl",		"texture_frag.glsl"};
 	std::string shaderDir="..\\SampleShaders\\";
 	
 	for(int i=0;i<NumShaders;i++){
@@ -73,6 +82,8 @@ int main()
 		};
 	}	
 
+
+	shaders[4].setParameter("tex",  senna_img); //set texture of 4th shader
 	
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
@@ -88,7 +99,7 @@ int main()
     glEnable(GL_DEPTH_TEST); 
     glDepthMask(GL_TRUE); 
   
-	enum drawModes{wireframe,outline,solid,DRAWEND} drawMode=wireframe;
+	enum drawModes{wireframe,outline,DRAWEND} drawMode=wireframe;
 	enum Models{cube,icosagon,torus,MODELSEND} model=cube;
 
 	createTorus();
@@ -160,7 +171,7 @@ int main()
 		case wireframe:
 			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 			break;
-		case solid:
+		
 		case outline:
 			glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 			break;
@@ -169,11 +180,11 @@ int main()
 		switch(model){
 		case cube:
 			glBegin(GL_QUADS);//draw some squares
-			glColor3i(0,1,1);
-            glVertex3f(-1.0f, -1.0f, -1.0f);
-            glVertex3f(-1.0f,  1.0f, -1.0f);
-            glVertex3f( 1.0f,  1.0f, -1.0f);
-            glVertex3f( 1.0f, -1.0f, -1.0f);
+			glColor3d(0,1,1);
+            glTexCoord2d(0,0);glVertex3f(-1.0f, -1.0f, -1.0f);
+            glTexCoord2d(0,1);glVertex3f(-1.0f,  1.0f, -1.0f);
+            glTexCoord2d(1,1);glVertex3f( 1.0f,  1.0f, -1.0f);
+            glTexCoord2d(1,0);glVertex3f( 1.0f, -1.0f, -1.0f);
 
 			glColor3f(0,0,1);
             glVertex3f(-1.0f, -1.0f, 1.0f);
@@ -199,11 +210,11 @@ int main()
             glVertex3f( 1.0f, -1.0f, -1.0f);
             glVertex3f( 1.0f, -1.0f,  1.0f);
 
-			glColor3f(1,0,0);
-            glVertex3f(-1.0f, 1.0f,  1.0f);
-            glVertex3f(-1.0f, 1.0f, -1.0f);
-            glVertex3f( 1.0f, 1.0f, -1.0f);
-            glVertex3f( 1.0f, 1.0f,  1.0f);
+			glColor3f(1,1,1);
+            glTexCoord2d(0,1);glVertex3f(-1.0f, 1.0f,  1.0f);
+            glTexCoord2d(0,0);glVertex3f(-1.0f, 1.0f, -1.0f);
+            glTexCoord2d(1,0);glVertex3f( 1.0f, 1.0f, -1.0f);
+            glTexCoord2d(1,1);glVertex3f( 1.0f, 1.0f,  1.0f);
 
         glEnd();
 			break;
@@ -233,14 +244,6 @@ int main()
 	    shaders[curShader].unbind();
 		App.pushGLStates();
 		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-
-		std::ostringstream vs; //string buffer to convert numbers to string
-		vs << "VertexShader is: " << vertexShaders[curShader];// 
-		
-		std::ostringstream fs; //string buffer to convert numbers to string
-		fs << "FragmentShader is: " << fragShaders[curShader];// 
-
-
 		//set up text properties
 		sf::Text atext;
 		atext.setFont(font);
@@ -249,15 +252,40 @@ int main()
 		atext.setColor(sf::Color::White);
 		atext.setPosition(0,0);
 
-		atext.setString(vs.str()); //ss.str() converts the string buffer into a regular string 
 
-		//draw the string
+		std::ostringstream ss; //string buffer to convert numbers to string
+		ss << "[Space] to change shader" ;// 
+		
+		std::ostringstream ms; //string buffer to convert numbers to string
+		ms << "[m] to change model:" ;// 
+		
+		std::ostringstream ws; //string buffer to convert numbers to string
+		ws << "[w] wireframe/solid";// 
+		
+
+		std::ostringstream vs; //string buffer to convert numbers to string
+		vs << "VertexShader is: " << vertexShaders[curShader];// 
+		
+		std::ostringstream fs; //string buffer to convert numbers to string
+		fs << "FragmentShader is: " << fragShaders[curShader];// 
+
+		atext.setString(ss.str()); //ss.str() converts the string buffer into a regular string 
 		App.draw(atext);
 
-		atext.setPosition(0,25);
+		atext.setPosition(0,20);
+		atext.setString(ms.str()); //ss.str() converts the string buffer into a regular string 
+		App.draw(atext);
 
+		atext.setPosition(0,40);
+		atext.setString(ws.str()); //ss.str() converts the string buffer into a regular string 
+		App.draw(atext);
+
+		atext.setPosition(300,0);
+		atext.setString(vs.str()); //ss.str() converts the string buffer into a regular string 
+		App.draw(atext);
+
+		atext.setPosition(300,20);
 		atext.setString(fs.str()); //ss.str() converts the string buffer into a regular string 
-
 		App.draw(atext);
 
 		//restore OpenGL setting that were saved earlier
