@@ -27,8 +27,19 @@
 #include <sstream> 
   
   
-  
-  
+#include "torus.h"
+#define X 0.52573111f
+#define Z 0.85065080f
+ 
+GLfloat icosVertices[][3]={ {-X,0.0,Z},{X,0.0,Z},{-X,0.0,-Z},{X,0.0,-Z},
+						{0.0, Z,X},{0.0,Z,-X},{0.0,-Z,X},{0.0,-Z,-X},
+						{Z,X,0.0},{-Z,X,0.0 },{Z,-X,0.0 },{-Z,-X,0.0}
+}; // coordinates for vertices an icosahedron
+ 
+ 
+GLuint icosTriangles[][3]={ {1,4,0}, {4,9,0},   {4,5,9},   {8,5,4},   {1,8,4},{1,10,8},  {10,3,8},   {8,3,5},   {3,2,5},   {3,7,2},{3,10,7},  {10,6,7},   {6,11,7},  {6,0,11},  {6,1,0}, {10,1,6},  {11,0,9},   {2,11,9},   {5,2,9},   {11,2,7}};
+
+
 //////////////////////////////////////////////////////////// 
 /// Entry point of application 
 //////////////////////////////////////////////////////////// 
@@ -77,7 +88,10 @@ int main()
     glEnable(GL_DEPTH_TEST); 
     glDepthMask(GL_TRUE); 
   
-	enum drawModes{wireframe,outline,solid,END} drawMode=wireframe;
+	enum drawModes{wireframe,outline,solid,DRAWEND} drawMode=wireframe;
+	enum Models{cube,icosagon,torus,MODELSEND} model=cube;
+
+	createTorus();
 
     //// Setup a perspective projection & Camera position 
     glMatrixMode(GL_PROJECTION); 
@@ -86,25 +100,10 @@ int main()
 	//set up a 3D Perspective View volume
 	//gluPerspective(90.f, 1.f, 1.f, 300.0f);//fov, aspect, zNear, zFar 
 
-	//set up a  orthographic projection same size as window
-	//this mease the vertex coordinates are in pixel space
-	glOrtho(-2,2,-2,2,0,10); // use pixel coordinates
+	//set up a  orthographic projection 4 uints high/wide centred on origin
 
-	#define X 0.52573111f
-	#define Z 0.85065080f
- 
-	GLfloat vertices[][3]={ {-X,0.0,Z},{X,0.0,Z},{-X,0.0,-Z},{X,0.0,-Z},
-							{0.0, Z,X},{0.0,Z,-X},{0.0,-Z,X},{0.0,-Z,-X},
-							{Z,X,0.0},{-Z,X,0.0 },{Z,-X,0.0 },{-Z,-X,0.0}
-	}; // coordinates for vertices an icosahedron
- 
- 
-	GLuint triangles[][3]={ {1,4,0}, {4,9,0},   {4,5,9},   {8,5,4},   {1,8,4},{1,10,8},  {10,3,8},   {8,3,5},   {3,2,5},   {3,7,2},{3,10,7},  {10,6,7},   {6,11,7},  {6,0,11},  {6,1,0}, {10,1,6},  {11,0,9},   {2,11,9},   {5,2,9},   {11,2,7}};
-// each triplet of integer, represents a triangle, each integer is an index into the vertex array
+	glOrtho(-2,2,-2,2,0,10); 
 
-	glEnableClientState(GL_VERTEX_ARRAY); // we want to use vertex arrays for coordinate info
-
-	glVertexPointer(3,GL_FLOAT,0,(GLvoid*)vertices);	// give openGL our array of vertices
 
 	while (App.isOpen()) 
     { 
@@ -127,8 +126,13 @@ int main()
 						
 			if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::W)){
 				drawMode=(drawModes)(drawMode+1);
-				if(drawMode==END)
+				if(drawMode==DRAWEND)
 					drawMode=(drawModes)0;
+			}
+			if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::M)){
+				model=(Models)(model+1);
+				if(model==MODELSEND)
+					model=(Models)0;
 			}
   
             
@@ -162,8 +166,66 @@ int main()
 			break;
   
 		}
-		glDrawElements(GL_TRIANGLES, 20*3, GL_UNSIGNED_INT,triangles);
-		
+		switch(model){
+		case cube:
+			glBegin(GL_QUADS);//draw some squares
+			glColor3i(0,1,1);
+            glVertex3f(-1.0f, -1.0f, -1.0f);
+            glVertex3f(-1.0f,  1.0f, -1.0f);
+            glVertex3f( 1.0f,  1.0f, -1.0f);
+            glVertex3f( 1.0f, -1.0f, -1.0f);
+
+			glColor3f(0,0,1);
+            glVertex3f(-1.0f, -1.0f, 1.0f);
+            glVertex3f(-1.0f,  1.0f, 1.0f);
+            glVertex3f( 1.0f,  1.0f, 1.0f);
+            glVertex3f( 1.0f, -1.0f, 1.0f);
+
+			glColor3f(1,0,1);
+            glVertex3f(-1.0f, -1.0f, -1.0f);
+            glVertex3f(-1.0f,  1.0f, -1.0f);
+            glVertex3f(-1.0f,  1.0f,  1.0f);
+            glVertex3f(-1.0f, -1.0f,  1.0f);
+
+			glColor3f(0,1,0);
+            glVertex3f(1.0f, -1.0f, -1.0f);
+            glVertex3f(1.0f,  1.0f, -1.0f);
+            glVertex3f(1.0f,  1.0f,  1.0f);
+            glVertex3f(1.0f, -1.0f,  1.0f);
+
+			glColor3f(1,1,0);
+            glVertex3f(-1.0f, -1.0f,  1.0f);
+            glVertex3f(-1.0f, -1.0f, -1.0f);
+            glVertex3f( 1.0f, -1.0f, -1.0f);
+            glVertex3f( 1.0f, -1.0f,  1.0f);
+
+			glColor3f(1,0,0);
+            glVertex3f(-1.0f, 1.0f,  1.0f);
+            glVertex3f(-1.0f, 1.0f, -1.0f);
+            glVertex3f( 1.0f, 1.0f, -1.0f);
+            glVertex3f( 1.0f, 1.0f,  1.0f);
+
+        glEnd();
+			break;
+		case icosagon:
+			glEnableClientState(GL_VERTEX_ARRAY); // we want to use vertex arrays for coordinate info
+			glVertexPointer(3,GL_FLOAT,0,(GLvoid*)icosVertices);// give openGL our array of vertices
+			glDrawElements(GL_TRIANGLES, 20*3, GL_UNSIGNED_INT,icosTriangles);
+			break;
+		case torus://draw torus
+			// we want to use a vertex array
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glVertexPointer(3,GL_FLOAT,0,(GLvoid*)torusVertices);
+ 
+			//we want to use a normal array
+			glEnableClientState(GL_NORMAL_ARRAY);
+			glNormalPointer(GL_FLOAT,0,(GLvoid*)torusNormals);
+
+			glDrawElements(GL_QUADS, torusNumQuads, GL_UNSIGNED_INT,torusQuads);
+ 
+			
+			break;
+		}
 	
   
 
