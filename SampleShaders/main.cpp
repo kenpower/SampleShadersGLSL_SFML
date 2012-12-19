@@ -143,7 +143,7 @@ int main()
 		glRotated(angle/10, 1, 1, 1); // rotate
 		
 		
-		//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
           
 
 		glDrawElements(GL_TRIANGLES, 20*3, GL_UNSIGNED_INT,triangles);
@@ -153,7 +153,7 @@ int main()
 		//Display info
 	    shaders[curShader].unbind();
 		App.pushGLStates();
-
+		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
 		std::ostringstream vs; //string buffer to convert numbers to string
 		vs << "VertexShader is: " << vertexShaders[curShader];// 
