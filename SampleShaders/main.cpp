@@ -70,10 +70,10 @@ int main()
 	}
 
     int curShader=0;
-	const int NumShaders=6;
+	const int NumShaders=7;
 	sf::Shader shaders[NumShaders];
-	std::string vertexShaders[NumShaders]={	"minimal_vert.glsl","flatten_vert.glsl","multicolor_vert.glsl",	"modelcolor_vert.glsl",	"texture_vert.glsl","diffuse_vert.glsl"};
-	std::string fragShaders[NumShaders]={	"minimal_frag.glsl","minimal_frag.glsl","color_frag.glsl",		"color_frag.glsl",		"texture_frag.glsl","color_frag.glsl"};
+	std::string vertexShaders[NumShaders]={	"minimal_vert.glsl","flatten_vert.glsl","multicolor_vert.glsl",	"modelcolor_vert.glsl",	"texture_vert.glsl","diffuse_vert.glsl",	"specular_vert.glsl"};
+	std::string fragShaders[NumShaders]={	"minimal_frag.glsl","minimal_frag.glsl","color_frag.glsl",		"color_frag.glsl",		"texture_frag.glsl","color_frag.glsl",		"color_frag.glsl"};
 	std::string shaderDir="..\\SampleShaders\\";
 	
 	for(int i=0;i<NumShaders;i++){
@@ -83,9 +83,13 @@ int main()
 	}	
 
 
-	sf::Vector3f lightPos(-10,10,0);
+	sf::Vector3f lightPos(-10,10,+15);
+	sf::Vector3f eyePos(0,0,0);
+
 	shaders[4].setParameter("tex",  senna_img); //set texture of 4th shader
 	shaders[5].setParameter("LightSourcePosition",  lightPos); //set texture of 4th shader
+	shaders[6].setParameter("LightSourcePosition",  lightPos); //set texture of 4th shader
+	shaders[6].setParameter("EyePosition",  eyePos); //set texture of 4th shader
 	
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
@@ -250,7 +254,7 @@ int main()
 	
   
 
-		//Display info
+		//Prepare to display text
 	    shaders[curShader].unbind();
 		App.pushGLStates();
 		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);

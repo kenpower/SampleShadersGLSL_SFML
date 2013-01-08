@@ -84,6 +84,7 @@
     <None Include="..\SampleShaders\minimal_vert.glsl" />
     <None Include="..\SampleShaders\modelcolor_vert.glsl" />
     <None Include="..\SampleShaders\multicolor_vert.glsl" />
+    <None Include="..\SampleShaders\specular_vert.glsl" />
     <None Include="..\SampleShaders\texture_frag.glsl" />
     <None Include="..\SampleShaders\texture_vert.glsl" />
     <None Include="ReadMe.txt" />
