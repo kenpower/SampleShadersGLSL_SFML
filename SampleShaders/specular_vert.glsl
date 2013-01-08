@@ -33,7 +33,7 @@ void main()
 	NdotL = max(dot(normal, lightDir), 0.0);
 		
 
-    NdotL=0;
+    //NdotL=0;
 	//calculate specular reflection
 	//blinn-phong
 	vec3 vertCameraSpace, eyeDir, half;

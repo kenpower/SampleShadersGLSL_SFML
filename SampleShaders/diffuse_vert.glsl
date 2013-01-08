@@ -22,7 +22,7 @@ void main()
 	normal = normalize(gl_NormalMatrix * gl_Normal);
 		
 
-	lightDir = normalize(vec3(LightSourcePosition)-vec3(gl_Vertex));
+	lightDir = normalize(vec3(LightSourcePosition)-vec3(gl_ModelViewMatrix * gl_Vertex));
 		
 	/* compute the cos of the angle between the normal and lights direction. 
 	Since these two are normalized the cosine is the dot product. We also 
