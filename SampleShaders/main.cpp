@@ -70,10 +70,10 @@ int main()
 	}
 
     int curShader=0;
-	const int NumShaders=5;
+	const int NumShaders=6;
 	sf::Shader shaders[NumShaders];
-	std::string vertexShaders[NumShaders]={	"minimal_vert.glsl","flatten_vert.glsl","multicolor_vert.glsl",	"modelcolor_vert.glsl",	"texture_vert.glsl"};
-	std::string fragShaders[NumShaders]={	"minimal_frag.glsl","minimal_frag.glsl","color_frag.glsl",		"color_frag.glsl",		"texture_frag.glsl"};
+	std::string vertexShaders[NumShaders]={	"minimal_vert.glsl","flatten_vert.glsl","multicolor_vert.glsl",	"modelcolor_vert.glsl",	"texture_vert.glsl","diffuse_vert.glsl"};
+	std::string fragShaders[NumShaders]={	"minimal_frag.glsl","minimal_frag.glsl","color_frag.glsl",		"color_frag.glsl",		"texture_frag.glsl","color_frag.glsl"};
 	std::string shaderDir="..\\SampleShaders\\";
 	
 	for(int i=0;i<NumShaders;i++){
@@ -83,7 +83,9 @@ int main()
 	}	
 
 
+	sf::Vector3f lightPos(-10,10,0);
 	shaders[4].setParameter("tex",  senna_img); //set texture of 4th shader
+	shaders[5].setParameter("LightSourcePosition",  lightPos); //set texture of 4th shader
 	
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
@@ -181,35 +183,41 @@ int main()
 		case cube:
 			glBegin(GL_QUADS);//draw some squares
 			glColor3d(0,1,1);
+			glNormal3d(0,0,-1);
             glTexCoord2d(0,0);glVertex3f(-1.0f, -1.0f, -1.0f);
             glTexCoord2d(0,1);glVertex3f(-1.0f,  1.0f, -1.0f);
             glTexCoord2d(1,1);glVertex3f( 1.0f,  1.0f, -1.0f);
             glTexCoord2d(1,0);glVertex3f( 1.0f, -1.0f, -1.0f);
 
 			glColor3f(0,0,1);
+			glNormal3d(0,0,1);
             glVertex3f(-1.0f, -1.0f, 1.0f);
             glVertex3f(-1.0f,  1.0f, 1.0f);
             glVertex3f( 1.0f,  1.0f, 1.0f);
             glVertex3f( 1.0f, -1.0f, 1.0f);
 
 			glColor3f(1,0,1);
+			glNormal3d(-1,0,0);
             glVertex3f(-1.0f, -1.0f, -1.0f);
             glVertex3f(-1.0f,  1.0f, -1.0f);
             glVertex3f(-1.0f,  1.0f,  1.0f);
             glVertex3f(-1.0f, -1.0f,  1.0f);
 
 			glColor3f(0,1,0);
+			glNormal3d(1,0,0);
             glVertex3f(1.0f, -1.0f, -1.0f);
             glVertex3f(1.0f,  1.0f, -1.0f);
             glVertex3f(1.0f,  1.0f,  1.0f);
             glVertex3f(1.0f, -1.0f,  1.0f);
 
 			glColor3f(1,1,0);
+			glNormal3d(0,-1,0);
             glVertex3f(-1.0f, -1.0f,  1.0f);
             glVertex3f(-1.0f, -1.0f, -1.0f);
             glVertex3f( 1.0f, -1.0f, -1.0f);
             glVertex3f( 1.0f, -1.0f,  1.0f);
 
+			glNormal3d(0,1,0);
 			glColor3f(1,1,1);
             glTexCoord2d(0,1);glVertex3f(-1.0f, 1.0f,  1.0f);
             glTexCoord2d(0,0);glVertex3f(-1.0f, 1.0f, -1.0f);
@@ -221,6 +229,8 @@ int main()
 		case icosagon:
 			glEnableClientState(GL_VERTEX_ARRAY); // we want to use vertex arrays for coordinate info
 			glVertexPointer(3,GL_FLOAT,0,(GLvoid*)icosVertices);// give openGL our array of vertices
+			glEnableClientState(GL_NORMAL_ARRAY);
+			glNormalPointer(GL_FLOAT,0,(GLvoid*)icosVertices);
 			glDrawElements(GL_TRIANGLES, 20*3, GL_UNSIGNED_INT,icosTriangles);
 			break;
 		case torus://draw torus

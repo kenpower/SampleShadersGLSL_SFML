@@ -78,6 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\SampleShaders\color_frag.glsl" />
+    <None Include="..\SampleShaders\diffuse_vert.glsl" />
     <None Include="..\SampleShaders\flatten_vert.glsl" />
     <None Include="..\SampleShaders\minimal_frag.glsl" />
     <None Include="..\SampleShaders\minimal_vert.glsl" />

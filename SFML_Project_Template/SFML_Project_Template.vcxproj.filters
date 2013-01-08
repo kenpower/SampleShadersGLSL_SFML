@@ -44,6 +44,9 @@
     <None Include="..\SampleShaders\texture_vert.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\SampleShaders\diffuse_vert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
