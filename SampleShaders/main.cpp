@@ -87,10 +87,10 @@ int main()
 	sf::Vector3f eyePos(0,0,0);
 
 	shaders[4].setParameter("tex",  senna_img); //set texture of 4th shader
-	shaders[5].setParameter("LightSourcePosition",  lightPos); //set texture of 4th shader
-	shaders[6].setParameter("LightSourcePosition",  lightPos); //set texture of 4th shader
+	//shaders[5].setParameter("LightSourcePosition",  lightPos); //set texture of 4th shader
+	//shaders[6].setParameter("LightSourcePosition",  lightPos); //set texture of 4th shader
 	shaders[6].setParameter("EyePosition",  eyePos); //set texture of 4th shader
-	shaders[7].setParameter("LightSourcePosition",  lightPos); //set texture of 4th shader
+	//shaders[7].setParameter("LightSourcePosition",  lightPos); //set texture of 4th shader
 	shaders[7].setParameter("EyePosition",  eyePos); //set texture of 4th shader
 	
 	GLenum err = glewInit();
@@ -171,7 +171,19 @@ int main()
         glLoadIdentity(); 
 		
 		double angle=Clock.getElapsedTime().asMilliseconds()/2.0;
+		//camera transformation
 		glTranslated(0,0,-5); //shift to original position
+
+		GLfloat light_color[]={0.0, 0.0, 1.0, 1.0};
+		GLfloat light_position[]={0.0, 10.0, 0.0, 1.0};
+		//glEnable(GL_LIGHT0); // switch on light0
+		//glEnable(GL_LIGHTING);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, light_color); // set color of diffuse component
+		glLightfv(GL_LIGHT0, GL_SPECULAR, light_color); // set color of specular component
+
+
+		glLightfv(GL_LIGHT0, GL_POSITION, light_position);   // set position
+
 		glRotated(angle/10, 1, 1, 1); // rotate
 		
 		

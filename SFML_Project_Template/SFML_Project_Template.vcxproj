@@ -80,10 +80,15 @@
     <None Include="..\SampleShaders\color_frag.glsl" />
     <None Include="..\SampleShaders\diffuse_vert.glsl" />
     <None Include="..\SampleShaders\flatten_vert.glsl" />
+    <None Include="..\SampleShaders\frag.glsl" />
     <None Include="..\SampleShaders\minimal_frag.glsl" />
     <None Include="..\SampleShaders\minimal_vert.glsl" />
     <None Include="..\SampleShaders\modelcolor_vert.glsl" />
+    <None Include="..\SampleShaders\modelcolour_frag.glsl" />
     <None Include="..\SampleShaders\multicolor_vert.glsl" />
+    <None Include="..\SampleShaders\phong_frag.glsl" />
+    <None Include="..\SampleShaders\phong_vert.glsl" />
+    <None Include="..\SampleShaders\red_frag.glsl" />
     <None Include="..\SampleShaders\specular_vert.glsl" />
     <None Include="..\SampleShaders\texture_frag.glsl" />
     <None Include="..\SampleShaders\texture_vert.glsl" />

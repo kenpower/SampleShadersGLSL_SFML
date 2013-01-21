@@ -4,7 +4,6 @@
 //assume a white light
 //don't care about distance
 
-uniform vec3 LightSourcePosition;
 uniform vec3 EyePosition;
 
 
@@ -24,7 +23,7 @@ void main()
 	normal = normalize(gl_NormalMatrix * gl_Normal);
 		
 
-	lightDir = normalize(vec3(LightSourcePosition)-vec3(gl_Vertex));
+	lightDir = normalize(vec3(gl_LightSource[0].position)-vec3(gl_Vertex));
 		
 	/* compute the cos of the angle between the normal and lights direction. 
 	Since these two are normalized the cosine is the dot product. We also 

@@ -20,7 +20,7 @@ void main()
 	//calc position in VCS
 	vcsPosition=gl_ModelViewMatrix * gl_Vertex;
 
-	lightDir = normalize(vec3(LightSourcePosition)-vec3(vcsPosition));
+	lightDir = normalize(vec3(gl_LightSource[0].position)-vec3(vcsPosition));
 	
 		
 

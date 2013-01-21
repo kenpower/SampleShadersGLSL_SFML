@@ -50,6 +50,21 @@
     <None Include="..\SampleShaders\specular_vert.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\SampleShaders\frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\SampleShaders\modelcolour_frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\SampleShaders\phong_frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\SampleShaders\phong_vert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\SampleShaders\red_frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
